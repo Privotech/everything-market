@@ -1,0 +1,225 @@
+// Everything Market — PostgreSQL Database Schema
+// Phase 1 & Phase 2 Production-Grade Foundation
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==============================================================================
+// Enums
+// ==============================================================================
+
+enum UserRole {
+  BUYER
+  SELLER
+  MODERATOR
+  ADMIN
+}
+
+enum SellerVerificationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  SUSPENDED
+  REJECTED
+}
+
+enum ProductStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  ARCHIVED
+  SUSPENDED
+}
+
+// ==============================================================================
+// User & Identity Domain
+// ==============================================================================
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String?        // Nullable for OAuth/Federated identity
+  firstName     String?
+  lastName      String?
+  phone         String?
+  role          UserRole       @default(BUYER)
+  isActive      Boolean        @default(true)
+  emailVerified DateTime?
+  sellerProfile SellerProfile?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// ==============================================================================
+// Seller & Merchant Domain
+// ==============================================================================
+
+model SellerProfile {
+  id                 String                   @id @default(cuid())
+  userId             String                   @unique
+  user               User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storeName          String                   @unique
+  storeSlug          String                   @unique
+  storeDescription   String?                  @db.Text
+  businessNumber     String?
+  verificationStatus SellerVerificationStatus @default(PENDING)
+  commissionRateBps  Int                      @default(1000) // Basis points (1000 = 10.00%)
+  payoutAccountEmail String?
+  supportEmail       String?
+  supportPhone       String?
+  isActive           Boolean                  @default(true)
+  products           Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeSlug])
+  @@index([verificationStatus])
+  @@map("seller_profiles")
+}
+
+// ==============================================================================
+// Category & Taxonomy Domain (Self-Referencing Tree)
+// ==============================================================================
+
+model Category {
+  id           String     @id @default(cuid())
+  name         String
+  slug         String     @unique
+  description  String?    @db.Text
+  parentId     String?
+  parent       Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Restrict)
+  children     Category[] @relation("CategoryHierarchy")
+  displayOrder Int        @default(0)
+  isActive     Boolean    @default(true)
+  products     Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slug])
+  @@index([parentId])
+  @@index([displayOrder])
+  @@map("categories")
+}
+
+// ==============================================================================
+// Catalog & Product Domain
+// ==============================================================================
+
+model Product {
+  id               String           @id @default(cuid())
+  sellerId         String
+  seller           SellerProfile    @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+  categoryId       String
+  category         Category         @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  title            String
+  slug             String           @unique
+  shortDescription String?
+  fullDescription  String           @db.Text
+  status           ProductStatus    @default(DRAFT)
+  basePriceCents   Int              // Minor currency units (e.g., 2999 = $29.99)
+  currency         String           @default("USD")
+  brand            String?
+  skuPrefix        String?
+  isTaxExempt      Boolean          @default(false)
+  variants         ProductVariant[]
+  images           ProductImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sellerId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([basePriceCents])
+  @@map("products")
+}
+
+// ==============================================================================
+// Product Variant Domain
+// ==============================================================================
+
+model ProductVariant {
+  id                  String         @id @default(cuid())
+  productId           String
+  product             Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku                 String         @unique
+  title               String         // e.g. "Space Black / 256GB"
+  priceCents          Int            // Variant-specific price in integer cents
+  compareAtPriceCents Int?           // Strikethrough/list price in integer cents
+  costPriceCents      Int?           // Merchant cost for margin reporting
+  barcode             String?
+  weightGrams         Int?
+  isActive            Boolean        @default(true)
+  attributes          Json?          // Structured key-value variant attributes
+  inventory           Inventory?
+  images              ProductImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([sku])
+  @@index([priceCents])
+  @@map("product_variants")
+}
+
+// ==============================================================================
+// Product Media Domain
+// ==============================================================================
+
+model ProductImage {
+  id           String          @id @default(cuid())
+  productId    String
+  product      Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variantId    String?
+  variant      ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  url          String
+  altText      String
+  displayOrder Int             @default(0)
+  isThumbnail  Boolean         @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([variantId])
+  @@index([displayOrder])
+  @@map("product_images")
+}
+
+// ==============================================================================
+// Inventory & Stock Allocation Domain
+// ==============================================================================
+
+model Inventory {
+  id                String         @id @default(cuid())
+  variantId         String         @unique
+  variant           ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  quantityOnHand    Int            @default(0) // Physical count in warehouse
+  quantityReserved  Int            @default(0) // Locked in active, unfulfilled orders
+  reorderThreshold  Int            @default(5) // Low stock notification trigger
+  allowBackorders   Boolean        @default(false)
+  warehouseLocation String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([variantId])
+  @@index([quantityOnHand])
+  @@map("inventories")
+}

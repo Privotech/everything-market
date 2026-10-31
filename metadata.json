@@ -1,0 +1,6 @@
+{
+  "name": "Everything Market",
+  "description": "A production-grade, modular-monolith e-commerce marketplace platform for multi-vendor commerce, built with Prisma ORM and PostgreSQL.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
