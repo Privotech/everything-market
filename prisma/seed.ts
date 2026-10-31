@@ -147,13 +147,15 @@ async function main() {
 
     // Variants and Inventory
     for (const v of prod.variants) {
+      const vAny = v as Record<string, any>;
+      const inv = vAny.inventory || {};
       const variantRecord = await prisma.productVariant.upsert({
         where: { sku: v.sku },
         update: {
           title: v.title,
           priceCents: v.priceCents,
           compareAtPriceCents: v.compareAtPriceCents,
-          costPriceCents: v.costPriceCents,
+          costPriceCents: vAny.costPriceCents ?? null,
           barcode: v.barcode,
           weightGrams: v.weightGrams,
           attributes: v.attributes,
@@ -165,7 +167,7 @@ async function main() {
           title: v.title,
           priceCents: v.priceCents,
           compareAtPriceCents: v.compareAtPriceCents,
-          costPriceCents: v.costPriceCents,
+          costPriceCents: vAny.costPriceCents ?? null,
           barcode: v.barcode,
           weightGrams: v.weightGrams,
           attributes: v.attributes,
@@ -176,17 +178,17 @@ async function main() {
       await prisma.inventory.upsert({
         where: { variantId: variantRecord.id },
         update: {
-          quantityOnHand: v.inventory.quantityOnHand,
-          quantityReserved: v.inventory.quantityReserved,
-          reorderThreshold: v.inventory.reorderThreshold,
-          warehouseLocation: v.inventory.warehouseLocation,
+          quantityOnHand: inv.quantityOnHand ?? 50,
+          quantityReserved: inv.quantityReserved ?? 0,
+          reorderThreshold: inv.reorderThreshold ?? 5,
+          warehouseLocation: inv.warehouseLocation ?? null,
         },
         create: {
           variantId: variantRecord.id,
-          quantityOnHand: v.inventory.quantityOnHand,
-          quantityReserved: v.inventory.quantityReserved,
-          reorderThreshold: v.inventory.reorderThreshold,
-          warehouseLocation: v.inventory.warehouseLocation,
+          quantityOnHand: inv.quantityOnHand ?? 50,
+          quantityReserved: inv.quantityReserved ?? 0,
+          reorderThreshold: inv.reorderThreshold ?? 5,
+          warehouseLocation: inv.warehouseLocation ?? null,
         },
       });
     }

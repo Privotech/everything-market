@@ -6,6 +6,16 @@
  * IEEE 754 precision errors in pricing, taxes, and vendor commissions.
  */
 
+export type SupportedCurrency = 'USD' | 'EUR' | 'NGN' | 'GBP' | 'KES';
+
+export const CURRENCY_RATES: Record<SupportedCurrency, { rate: number; symbol: string; locale: string }> = {
+  USD: { rate: 1.0, symbol: '$', locale: 'en-US' },
+  EUR: { rate: 0.92, symbol: '€', locale: 'de-DE' },
+  NGN: { rate: 1450.0, symbol: '₦', locale: 'en-NG' },
+  GBP: { rate: 0.79, symbol: '£', locale: 'en-GB' },
+  KES: { rate: 130.0, symbol: 'KSh ', locale: 'en-KE' },
+};
+
 export interface FormattedMoneyOptions {
   locale?: string;
   currency?: string;
@@ -25,9 +35,36 @@ export function formatMoney(
     throw new TypeError(`formatMoney: Amount must be a finite number, received ${cents}`);
   }
 
+  const curr = (currency.toUpperCase() as SupportedCurrency) || 'USD';
+  const currInfo = CURRENCY_RATES[curr];
+
+  if (curr === 'USD') {
+    const locale = options?.locale || 'en-US';
+    const majorUnits = cents / 100;
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: 'USD',
+      currencyDisplay: options?.showCurrencyCode ? 'code' : 'symbol',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(majorUnits);
+  }
+
+  if (currInfo) {
+    // Converted to target currency
+    const convertedMajor = (cents / 100) * currInfo.rate;
+    const isAfricanCurrency = curr === 'NGN' || curr === 'KES';
+    return new Intl.NumberFormat(options?.locale || currInfo.locale, {
+      style: 'currency',
+      currency: curr,
+      currencyDisplay: options?.showCurrencyCode ? 'code' : 'symbol',
+      minimumFractionDigits: isAfricanCurrency ? 0 : 2,
+      maximumFractionDigits: isAfricanCurrency ? 0 : 2,
+    }).format(convertedMajor);
+  }
+
   const locale = options?.locale || 'en-US';
   const majorUnits = cents / 100;
-
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,

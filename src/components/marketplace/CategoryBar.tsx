@@ -1,65 +1,89 @@
 import React from 'react';
-import { CatalogCategory } from '@/modules/catalog/types.ts';
-import { Layers } from 'lucide-react';
+import {
+  Layers,
+  Smartphone,
+  Coffee,
+  Compass,
+  Sparkles,
+  Shirt,
+  Boxes,
+} from 'lucide-react';
+import { useMarketplace } from '@/src/context/MarketplaceContext.tsx';
 
-interface CategoryBarProps {
-  categories: CatalogCategory[];
-  activeCategoryId: string | null;
-  onSelectCategory: (id: string | null) => void;
-}
+const CATEGORY_ICONS: Record<string, React.ElementType> = {
+  cat_all: Layers,
+  cat_electronics: Smartphone,
+  cat_home_kitchen: Coffee,
+  cat_outdoor_gear: Compass,
+  cat_beauty_wellness: Sparkles,
+  cat_fashion: Shirt,
+  cat_wholesale_b2b: Boxes,
+};
 
-export default function CategoryBar({
-  categories,
-  activeCategoryId,
-  onSelectCategory,
-}: CategoryBarProps) {
+export default function CategoryBar() {
+  const { categories, selectedCategory, setSelectedCategory, products } = useMarketplace();
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <Layers className="h-3.5 w-3.5 text-indigo-400" />
-          Marketplace Taxonomy & Hierarchies
+        <h3 className="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+          <Layers className="h-4 w-4 text-orange-400" />
+          Marketplace Categories
         </h3>
-        <span className="text-xs text-slate-500">
-          {categories.length} Top Categories | Self-Referencing DB Relation
+        <span className="text-xs text-slate-400 font-medium">
+          {products.length} Products Available
         </span>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      {/* Category Pills Slider */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         <button
           type="button"
-          onClick={() => onSelectCategory(null)}
-          className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors ${
-            activeCategoryId === null
-              ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/20'
+          onClick={() => setSelectedCategory(null)}
+          className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap shadow-sm ${
+            selectedCategory === null
+              ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-orange-500/20'
               : 'border border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700 hover:text-white'
           }`}
         >
-          All Permitted Categories
+          <Layers className="h-4 w-4" />
+          All Categories ({products.length})
         </button>
 
-        {categories.map((cat) => {
-          const isActive = activeCategoryId === cat.id;
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => onSelectCategory(cat.id)}
-              className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                isActive
-                  ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/20'
-                  : 'border border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700 hover:text-white'
-              }`}
-            >
-              {cat.name}
-              {cat.subcategories && cat.subcategories.length > 0 && (
-                <span className="ml-1.5 text-[10px] text-slate-400">
-                  ({cat.subcategories.length})
-                </span>
-              )}
-            </button>
-          );
-        })}
+        {categories
+          .filter((c) => c.slug !== 'all')
+          .map((cat) => {
+            const Icon = CATEGORY_ICONS[cat.id] || Layers;
+            const isSelected = selectedCategory === cat.id;
+            const count = products.filter(
+              (p) => p.category.id === cat.id || p.category.slug === cat.slug
+            ).length;
+
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap shadow-sm ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-orange-500/20'
+                    : 'border border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700 hover:text-white'
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{cat.name}</span>
+                {count > 0 && (
+                  <span
+                    className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                      isSelected ? 'bg-black/20 text-white' : 'bg-slate-800 text-slate-400'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
       </div>
     </div>
   );

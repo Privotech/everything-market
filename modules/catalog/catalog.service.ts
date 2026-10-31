@@ -120,6 +120,11 @@ export async function getFeaturedProducts(): Promise<CatalogProduct[]> {
           displayOrder: img.displayOrder,
           isThumbnail: img.isThumbnail,
         })),
+        skuPrefix: p.skuPrefix,
+        rating: 4.8,
+        reviewCount: 120,
+        soldCount: 500,
+        freeShipping: !p.isTaxExempt,
       }));
     }
   } catch {
@@ -152,6 +157,9 @@ export async function getFeaturedProducts(): Promise<CatalogProduct[]> {
         storeName: sel?.storeName || 'Merchant',
         storeSlug: sel?.storeSlug || 'merchant',
         verificationStatus: sel?.verificationStatus || 'APPROVED',
+        rating: sel?.rating || 4.8,
+        responseRate: sel?.responseRate || '98%',
+        yearsActive: sel?.yearsActive || 3,
       },
       variants: p.variants.map((v) => ({
         id: v.id,
@@ -166,6 +174,18 @@ export async function getFeaturedProducts(): Promise<CatalogProduct[]> {
         availableStock: Math.max(0, v.inventory.quantityOnHand - v.inventory.quantityReserved),
       })),
       images: p.images,
+      rating: p.rating || 4.8,
+      reviewCount: p.reviewCount || 120,
+      soldCount: p.soldCount || 500,
+      isFlashDeal: p.isFlashDeal || false,
+      flashDiscountPercent: p.flashDiscountPercent,
+      isWholesale: p.isWholesale || false,
+      moq: p.moq || 1,
+      wholesaleTiers: p.wholesaleTiers,
+      freeShipping: p.freeShipping ?? true,
+      tags: p.tags || [],
+      specifications: p.specifications || {},
+      reviews: p.reviews || [],
     };
   });
 }
