@@ -19,7 +19,7 @@ export default function Footer() {
     <footer className="border-t border-slate-800 bg-slate-950 text-slate-400 text-xs">
       {/* Top Value Strip */}
       <div className="border-b border-slate-800/80 bg-slate-900/50 py-8 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="mx-auto max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10 text-orange-400">
               <Truck className="h-5 w-5" />
@@ -231,7 +231,7 @@ export default function Footer() {
         <div className="mt-12 border-t border-slate-800/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© 2026 Everything Market Inc. All rights reserved.</p>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="rounded bg-slate-900 border border-slate-800 px-2 py-1 font-mono text-[10px] text-slate-400">
               VISA
             </span>

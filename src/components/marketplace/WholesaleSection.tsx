@@ -19,30 +19,30 @@ export default function WholesaleSection() {
   };
 
   return (
-    <section className="rounded-3xl border border-amber-900/40 bg-gradient-to-b from-amber-950/20 via-slate-900 to-slate-950 p-6 sm:p-8 space-y-6 shadow-2xl">
+    <section className="rounded-3xl border border-amber-900/40 bg-gradient-to-b from-amber-950/20 via-slate-900 to-slate-950 p-4 sm:p-8 space-y-6 shadow-2xl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-900/40 pb-5">
-        <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 shadow-lg shadow-amber-500/30">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500 shadow-lg shadow-amber-500/30">
             <Boxes className="h-6 w-6 text-slate-950 font-black" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-black text-white tracking-tight">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                 🏭 Alibaba B2B Wholesale & Factory Direct Hub
               </h2>
-              <span className="rounded-md bg-amber-500 px-2 py-0.5 text-xs font-black uppercase text-slate-950">
+              <span className="rounded-md bg-amber-500 px-2 py-0.5 text-[10px] sm:text-xs font-black uppercase text-slate-950">
                 OEM / ODM VERIFIED
               </span>
             </div>
-            <p className="text-xs text-amber-300 font-medium">
+            <p className="text-xs text-amber-300 font-medium mt-1">
               Source direct from certified manufacturing plants. Low MOQs, volume tiered pricing, and freight delivery.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-300 bg-slate-950/80 px-4 py-2 rounded-2xl border border-amber-900/50">
-          <Building2 className="h-4 w-4 text-amber-400" />
+        <div className="flex items-center self-start sm:self-auto gap-2 text-xs text-slate-300 bg-slate-950/80 px-3.5 sm:px-4 py-2 rounded-2xl border border-amber-900/50">
+          <Building2 className="h-4 w-4 shrink-0 text-amber-400" />
           <span>Gold Verified Suppliers: <strong>100% On-Time Delivery Guarantee</strong></span>
         </div>
       </div>

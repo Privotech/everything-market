@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@layer base {
+  html,
+  body {
+    background-color: #020617;
+    color: #f1f5f9;
+    overflow-x: clip;
+    max-width: 100%;
+  }
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

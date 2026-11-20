@@ -73,24 +73,24 @@ export default function HeroSection() {
   return (
     <div className="space-y-4">
       {/* Dynamic Animated Carousel Banner */}
-      <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${banner.bgGradient} p-6 sm:p-10 text-white shadow-2xl transition-all duration-700`}>
+      <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${banner.bgGradient} p-5 sm:p-10 text-white shadow-2xl transition-all duration-700`}>
         {/* Glow & Backdrop patterns */}
         <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-white/10 blur-3xl pointer-events-none" />
         <div className="absolute -left-20 -bottom-20 h-80 w-80 rounded-full bg-black/20 blur-2xl pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
           <div className="max-w-xl space-y-4">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-black/30 backdrop-blur-md px-3 py-1 text-xs font-black uppercase tracking-wider text-amber-300 border border-white/20">
-                <Sparkles className="h-3.5 w-3.5" />
+              <span className="inline-flex items-center gap-1 rounded-full bg-black/30 backdrop-blur-md px-3 py-1 text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-300 border border-white/20">
+                <Sparkles className="h-3.5 w-3.5 shrink-0" />
                 {banner.tag}
               </span>
-              <span className="rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold text-white">
+              <span className="rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-[11px] sm:text-xs font-bold text-white">
                 {banner.badge}
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight drop-shadow-md">
+            <h1 className="text-2xl sm:text-5xl font-black tracking-tight leading-tight drop-shadow-md">
               {banner.headline}
             </h1>
 
@@ -167,7 +167,7 @@ export default function HeroSection() {
         </div>
 
         {/* Carousel Prev/Next & Dots */}
-        <div className="absolute bottom-4 right-6 flex items-center gap-2">
+        <div className="relative z-10 mt-5 flex items-center justify-end gap-2 md:mt-0 md:absolute md:bottom-4 md:right-6">
           <button
             type="button"
             onClick={() => setCurrentSlide((prev) => (prev === 0 ? BANNERS.length - 1 : prev - 1))}
@@ -198,7 +198,7 @@ export default function HeroSection() {
       </div>
 
       {/* Value Proposition Pills (Amazon / Jumia / Alibaba service guarantees) */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
         <div className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-3.5">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 text-orange-400">
             <Truck className="h-5 w-5" />

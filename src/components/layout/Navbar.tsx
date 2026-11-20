@@ -58,17 +58,19 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full shadow-md bg-slate-950 border-b border-slate-800">
       {/* Top Banner (Jumia / Temu / Alibaba Flash Sales Bar) */}
-      <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 px-4 py-1.5 text-xs text-white font-medium">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
-            <span className="flex items-center gap-1 rounded bg-black/20 px-1.5 py-0.5 font-bold uppercase tracking-wider text-[10px]">
+      <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 px-3 sm:px-4 py-1.5 text-xs text-white font-medium">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2">
+          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
+            <span className="shrink-0 flex items-center gap-1 rounded bg-black/20 px-1.5 py-0.5 font-bold uppercase tracking-wider text-[10px]">
               <Zap className="h-3 w-3 fill-amber-300 text-amber-300" />
               Flash Sale
             </span>
-            <span>Up to 70% Off Electronics & Gear! Free Worldwide Shipping on orders over $35</span>
+            <span className="truncate">
+              Up to 70% Off Electronics & Gear! Free Worldwide Shipping on orders over $35
+            </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-4 text-xs">
+          <div className="hidden md:flex shrink-0 items-center gap-4 text-xs">
             {/* Delivery Location Selector */}
             <div className="relative">
               <button
@@ -154,8 +156,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Main Nav (Search, Brand, Actions) */}
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      {/* Main Nav (Brand, Actions, and Responsive Search Bar) */}
+      <div className="mx-auto flex max-w-7xl flex-wrap md:flex-nowrap items-center justify-between gap-2.5 md:gap-4 px-3 py-2.5 sm:px-6 md:py-3">
         {/* Brand Logo */}
         <button
           type="button"
@@ -164,17 +166,17 @@ export default function Navbar() {
             setSelectedCategory(null);
             setSearchQuery('');
           }}
-          className="flex items-center gap-2 group text-left"
+          className="flex shrink-0 items-center gap-2 group text-left"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-rose-500 shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform">
-            <Store className="h-6 w-6 text-white" />
+          <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl sm:rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-rose-500 shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform">
+            <Store className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xl font-black tracking-tight text-white">
+              <span className="text-base sm:text-xl font-black tracking-tight text-white">
                 Everything<span className="text-orange-400">Market</span>
               </span>
-              <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-[10px] font-extrabold text-orange-400 border border-orange-500/30">
+              <span className="hidden xs:inline-block sm:inline-block rounded bg-orange-500/20 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-extrabold text-orange-400 border border-orange-500/30">
                 GLOBAL
               </span>
             </div>
@@ -184,9 +186,9 @@ export default function Navbar() {
           </div>
         </button>
 
-        {/* Global Mega Search Bar */}
-        <div className="flex flex-1 max-w-2xl mx-2">
-          <div className="relative flex w-full items-center rounded-xl border border-slate-700 bg-slate-900 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 transition-all">
+        {/* Global Mega Search Bar (Full-width row 2 on mobile, inline flex-1 on md+) */}
+        <div className="order-last w-full md:order-none md:w-auto md:flex-1 md:max-w-2xl md:mx-2 min-w-0">
+          <div className="relative flex w-full min-w-0 items-center rounded-xl border border-slate-700 bg-slate-900 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 transition-all">
             {/* Category Filter selector in Search */}
             <select
               value={selectedCategory || ''}
@@ -201,19 +203,19 @@ export default function Navbar() {
               ))}
             </select>
 
-            <div className="relative flex-1">
+            <div className="relative flex-1 min-w-0">
               <input
                 type="text"
-                placeholder="Search 10,000+ items, wireless earbuds, GaN chargers, titanium gear..."
+                placeholder="Search products, earbuds, chargers, gear..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent py-2.5 pl-4 pr-10 text-sm text-white placeholder-slate-400 focus:outline-none"
+                className="w-full min-w-0 bg-transparent py-2 sm:py-2.5 pl-3 sm:pl-4 pr-8 sm:pr-10 text-sm text-white placeholder-slate-400 focus:outline-none"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -222,7 +224,7 @@ export default function Navbar() {
 
             <button
               type="button"
-              className="flex items-center gap-1.5 rounded-r-xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:from-orange-600 hover:to-amber-600 transition-all"
+              className="shrink-0 flex items-center gap-1.5 rounded-r-xl bg-gradient-to-r from-orange-500 to-amber-500 px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-bold text-white shadow-md hover:from-orange-600 hover:to-amber-600 transition-all"
             >
               <Search className="h-4 w-4" />
               <span className="hidden sm:inline">Search</span>
@@ -231,13 +233,13 @@ export default function Navbar() {
         </div>
 
         {/* Action Buttons: Auth, Wishlist, Cart, Mobile Toggle */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           {/* User Auth Account Button */}
           {isAuthenticated && user ? (
             <button
               type="button"
               onClick={() => openAuthModal('profile')}
-              className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-bold text-white hover:border-orange-500/50 hover:bg-slate-800 transition-all"
+              className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 p-1 sm:px-3 sm:py-1.5 text-xs font-bold text-white hover:border-orange-500/50 hover:bg-slate-800 transition-all"
               title="My Account & Security"
             >
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-tr from-orange-500 to-amber-500 text-xs font-black text-white">
@@ -256,7 +258,8 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => openAuthModal('signin')}
-              className="flex items-center gap-1.5 rounded-xl border border-orange-500/40 bg-orange-500/10 px-3 py-2 text-xs font-bold text-orange-400 hover:bg-orange-500 hover:text-white transition-all"
+              className="flex h-9 w-9 sm:h-10 sm:w-auto items-center justify-center gap-1.5 rounded-xl border border-orange-500/40 bg-orange-500/10 sm:px-3 text-xs font-bold text-orange-400 hover:bg-orange-500 hover:text-white transition-all"
+              title="Sign In / Register"
             >
               <User className="h-4 w-4" />
               <span className="hidden sm:inline">Sign In</span>
@@ -267,10 +270,10 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setIsWishlistOpen(true)}
-            className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700 hover:text-rose-400 transition-colors"
+            className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700 hover:text-rose-400 transition-colors"
             title="Wishlist"
           >
-            <Heart className={`h-5 w-5 ${wishlist.length > 0 ? 'fill-rose-500 text-rose-500' : ''}`} />
+            <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${wishlist.length > 0 ? 'fill-rose-500 text-rose-500' : ''}`} />
             {wishlist.length > 0 && (
               <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white">
                 {wishlist.length}
@@ -282,10 +285,10 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setIsCartOpen(true)}
-            className="flex items-center gap-2 rounded-xl bg-orange-500 px-3.5 py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/25 hover:bg-orange-600 transition-all"
+            className="flex h-9 sm:h-auto items-center gap-2 rounded-xl bg-orange-500 px-2.5 sm:px-3.5 sm:py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/25 hover:bg-orange-600 transition-all"
           >
             <div className="relative">
-              <ShoppingBag className="h-5 w-5" />
+              <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
               {cartTotalCount > 0 && (
                 <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-black text-orange-600">
                   {cartTotalCount}
@@ -302,16 +305,17 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300"
+            className="md:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300"
+            aria-label="Toggle Menu"
           >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
         </div>
       </div>
 
       {/* Secondary E-Commerce Navigation Bar (Jumia & Alibaba Style Tabs) */}
-      <div className="border-t border-slate-800/80 bg-slate-900/90 px-4 py-2">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 overflow-x-auto scrollbar-none">
+      <div className="w-full overflow-hidden border-t border-slate-800/80 bg-slate-900/90 px-3 sm:px-4 py-2">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 overflow-x-auto scrollbar-none">
           <div className="flex items-center gap-1 sm:gap-2">
             <button
               type="button"
@@ -402,9 +406,35 @@ export default function Navbar() {
       {/* Mobile Drawer Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-800 bg-slate-950 p-4 space-y-3">
-          <div className="flex items-center justify-between text-xs text-slate-300 pb-2 border-b border-slate-800">
-            <span>Location: <strong>{deliveryLocation}</strong></span>
-            <span>Currency: <strong>{currency}</strong></span>
+          <div className="grid grid-cols-2 gap-2 pb-2 border-b border-slate-800 text-xs">
+            <label className="flex flex-col gap-1 text-slate-400">
+              <span className="text-[10px] font-bold uppercase">Destination</span>
+              <select
+                value={deliveryLocation}
+                onChange={(e) => setDeliveryLocation(e.target.value)}
+                className="rounded-lg border border-slate-800 bg-slate-900 px-2 py-1.5 text-xs font-semibold text-white focus:outline-none"
+              >
+                {LOCATIONS.map((loc) => (
+                  <option key={loc} value={loc}>
+                    {loc}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex flex-col gap-1 text-slate-400">
+              <span className="text-[10px] font-bold uppercase">Currency</span>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value as SupportedCurrency)}
+                className="rounded-lg border border-slate-800 bg-slate-900 px-2 py-1.5 text-xs font-semibold text-white focus:outline-none"
+              >
+                {(['USD', 'EUR', 'NGN', 'KES', 'GBP'] as SupportedCurrency[]).map((curr) => (
+                  <option key={curr} value={curr}>
+                    {curr}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs font-bold">
             <button
@@ -468,6 +498,23 @@ export default function Navbar() {
               💼 Seller Center
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              openAuthModal(isAuthenticated ? 'profile' : 'signin');
+            }}
+            className="flex w-full items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-950/40 px-3 py-2.5 text-xs font-bold text-emerald-300"
+          >
+            <span className="flex items-center gap-2">
+              <Database className="h-4 w-4 text-emerald-400" />
+              {isAuthenticated && user ? `${user.email} (${user.role})` : 'Sign In / Register (NeonDB)'}
+            </span>
+            <span className="text-[10px] uppercase tracking-wider text-emerald-400">
+              {isAuthenticated ? 'Account' : 'Auth'}
+            </span>
+          </button>
         </div>
       )}
     </header>

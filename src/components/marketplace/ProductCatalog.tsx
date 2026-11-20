@@ -164,12 +164,12 @@ export default function ProductCatalog() {
           </button>
 
           {/* Merchant Filter */}
-          <div className="flex items-center gap-1 bg-slate-950 rounded-xl border border-slate-800 px-2.5 py-1">
-            <Filter className="h-3.5 w-3.5 text-slate-400" />
+          <div className="flex max-w-full min-w-0 items-center gap-1 bg-slate-950 rounded-xl border border-slate-800 px-2.5 py-1">
+            <Filter className="h-3.5 w-3.5 shrink-0 text-slate-400" />
             <select
               value={selectedMerchant}
               onChange={(e) => setSelectedMerchant(e.target.value)}
-              className="bg-transparent text-slate-200 focus:outline-none"
+              className="max-w-full min-w-0 bg-transparent text-slate-200 focus:outline-none truncate"
             >
               <option value="">All Merchants</option>
               {merchants.map((m) => (
@@ -181,12 +181,12 @@ export default function ProductCatalog() {
           </div>
 
           {/* Sort By Dropdown */}
-          <div className="flex items-center gap-1 bg-slate-950 rounded-xl border border-slate-800 px-2.5 py-1">
-            <ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
+          <div className="flex max-w-full min-w-0 items-center gap-1 bg-slate-950 rounded-xl border border-slate-800 px-2.5 py-1">
+            <ArrowUpDown className="h-3.5 w-3.5 shrink-0 text-slate-400" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="bg-transparent text-slate-200 font-bold focus:outline-none"
+              className="max-w-full min-w-0 bg-transparent text-slate-200 font-bold focus:outline-none"
             >
               <option value="featured">Sort: Featured</option>
               <option value="best-selling">Sort: Best Selling 🔥</option>
