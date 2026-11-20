@@ -13,6 +13,7 @@ import {
   Banknote,
 } from 'lucide-react';
 import { useMarketplace } from '@/src/context/MarketplaceContext.tsx';
+import { useAuth } from '@/src/context/AuthContext.tsx';
 import { formatMoney } from '@/lib/money.ts';
 import { ShippingAddress } from '@/modules/catalog/types.ts';
 
@@ -30,18 +31,32 @@ export default function CheckoutModal() {
     currency,
   } = useMarketplace();
 
+  const { user } = useAuth();
+
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [address, setAddress] = useState<ShippingAddress>({
-    fullName: 'Jane Doe',
-    email: 'shopper@everythingmarket.dev',
-    phone: '+1 (555) 234-5678',
+  const [address, setAddress] = useState<ShippingAddress>(() => ({
+    fullName: user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Jane Doe',
+    email: user?.email || 'shopper@everythingmarket.dev',
+    phone: user?.phone || '+1 (555) 234-5678',
     street: '742 Evergreen Terrace',
     apartment: 'Apt 4B',
     city: 'New York',
     state: 'NY',
     zipCode: '10001',
     country: 'United States',
-  });
+  }));
+
+  // Sync with auth user if login occurs
+  React.useEffect(() => {
+    if (user) {
+      setAddress((prev) => ({
+        ...prev,
+        fullName: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : prev.fullName,
+        email: user.email,
+        phone: user.phone || prev.phone,
+      }));
+    }
+  }, [user]);
 
   const [shippingMethod, setShippingMethod] = useState('Standard Express (3-5 business days)');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cod' | 'mobile'>('card');

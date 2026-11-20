@@ -1,5 +1,6 @@
 import React from 'react';
 import { MarketplaceProvider, useMarketplace } from '@/src/context/MarketplaceContext.tsx';
+import { AuthProvider } from '@/src/context/AuthContext.tsx';
 import Navbar from '@/src/components/layout/Navbar.tsx';
 import Footer from '@/src/components/layout/Footer.tsx';
 import HeroSection from '@/src/components/marketplace/HeroSection.tsx';
@@ -12,6 +13,7 @@ import CheckoutModal from '@/src/components/checkout/CheckoutModal.tsx';
 import WishlistModal from '@/src/components/wishlist/WishlistModal.tsx';
 import OrdersView from '@/src/components/orders/OrdersView.tsx';
 import SellerDashboard from '@/src/components/seller/SellerDashboard.tsx';
+import AuthModal from '@/src/components/auth/AuthModal.tsx';
 
 function MarketplaceMain() {
   const { activeTab, loading } = useMarketplace();
@@ -90,23 +92,26 @@ function MarketplaceMain() {
 
 export default function App() {
   return (
-    <MarketplaceProvider>
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-orange-500 selection:text-white">
-        {/* Global Mega Header */}
-        <Navbar />
+    <AuthProvider>
+      <MarketplaceProvider>
+        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-orange-500 selection:text-white">
+          {/* Global Mega Header */}
+          <Navbar />
 
-        {/* Dynamic Multi-Tab Content */}
-        <MarketplaceMain />
+          {/* Dynamic Multi-Tab Content */}
+          <MarketplaceMain />
 
-        {/* Modals & Slide-over Panels */}
-        <ProductDetailModal />
-        <CartDrawer />
-        <CheckoutModal />
-        <WishlistModal />
+          {/* Modals & Slide-over Panels */}
+          <ProductDetailModal />
+          <CartDrawer />
+          <CheckoutModal />
+          <WishlistModal />
+          <AuthModal />
 
-        {/* Mega Footer */}
-        <Footer />
-      </div>
-    </MarketplaceProvider>
+          {/* Mega Footer */}
+          <Footer />
+        </div>
+      </MarketplaceProvider>
+    </AuthProvider>
   );
 }

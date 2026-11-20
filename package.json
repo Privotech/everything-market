@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
+    "build": "prisma generate && vite build",
+    "postinstall": "prisma generate",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
+    "@neondatabase/serverless": "^1.2.0",
     "@prisma/client": "6.4.1",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.1.1",
@@ -35,7 +37,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.4.21",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.27.0",
     "prisma": "6.4.1",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.21.0",

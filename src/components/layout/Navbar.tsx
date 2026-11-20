@@ -14,8 +14,11 @@ import {
   Menu,
   X,
   ShieldCheck,
+  User,
+  Database,
 } from 'lucide-react';
 import { useMarketplace } from '@/src/context/MarketplaceContext.tsx';
+import { useAuth } from '@/src/context/AuthContext.tsx';
 import { SupportedCurrency, formatMoney } from '@/lib/money.ts';
 
 const LOCATIONS = [
@@ -46,6 +49,7 @@ export default function Navbar() {
     deliveryLocation,
     setDeliveryLocation,
   } = useMarketplace();
+  const { user, isAuthenticated, openAuthModal, dbInfo } = useAuth();
 
   const [locationDropdown, setLocationDropdown] = useState(false);
   const [currencyDropdown, setCurrencyDropdown] = useState(false);
@@ -136,6 +140,16 @@ export default function Navbar() {
               <ShieldCheck className="h-3.5 w-3.5" />
               Buyer Protection
             </span>
+
+            <button
+              type="button"
+              onClick={() => openAuthModal('security')}
+              className="flex items-center gap-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 text-[11px] text-emerald-300 hover:bg-emerald-900/60 transition-colors"
+              title="PostgreSQL NeonDB Zero-Trust Storage"
+            >
+              <Database className="h-3 w-3 text-emerald-400" />
+              <span>NeonDB Active</span>
+            </button>
           </div>
         </div>
       </div>
@@ -216,8 +230,39 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Action Buttons: Wishlist, Cart, Seller Hub */}
+        {/* Action Buttons: Auth, Wishlist, Cart, Mobile Toggle */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* User Auth Account Button */}
+          {isAuthenticated && user ? (
+            <button
+              type="button"
+              onClick={() => openAuthModal('profile')}
+              className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-bold text-white hover:border-orange-500/50 hover:bg-slate-800 transition-all"
+              title="My Account & Security"
+            >
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-tr from-orange-500 to-amber-500 text-xs font-black text-white">
+                {user.firstName ? user.firstName[0] : user.email[0].toUpperCase()}
+              </div>
+              <div className="hidden sm:flex flex-col text-left">
+                <span className="text-[10px] text-slate-400 leading-none">
+                  {user.role}
+                </span>
+                <span className="text-xs text-white font-bold leading-tight truncate max-w-[90px]">
+                  {user.firstName || user.email.split('@')[0]}
+                </span>
+              </div>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => openAuthModal('signin')}
+              className="flex items-center gap-1.5 rounded-xl border border-orange-500/40 bg-orange-500/10 px-3 py-2 text-xs font-bold text-orange-400 hover:bg-orange-500 hover:text-white transition-all"
+            >
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign In</span>
+            </button>
+          )}
+
           {/* Wishlist Button */}
           <button
             type="button"

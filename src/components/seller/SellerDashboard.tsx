@@ -13,11 +13,13 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useMarketplace } from '@/src/context/MarketplaceContext.tsx';
+import { useAuth } from '@/src/context/AuthContext.tsx';
 import { formatMoney, dollarsToCents } from '@/lib/money.ts';
 
 export default function SellerDashboard() {
   const { products, addNewProduct, updateProductStock, categories, currency, setActiveTab } =
     useMarketplace();
+  const { user, openAuthModal } = useAuth();
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -79,23 +81,37 @@ export default function SellerDashboard() {
                 💼 Merchant & Seller Center Portal
               </h2>
               <span className="rounded-md bg-purple-500/20 px-2 py-0.5 text-xs font-black text-purple-300 border border-purple-500/30">
-                VERIFIED GOLD VENDOR
+                {user?.sellerProfile ? `STORE: ${user.sellerProfile.storeName}` : 'VERIFIED GOLD VENDOR'}
               </span>
             </div>
             <p className="text-xs text-slate-400">
               Manage multi-vendor storefront catalog, inventory allocation, and factory listings.
+              {user ? ` Signed in as ${user.email} (${user.role}).` : ''}
             </p>
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg hover:bg-purple-500 transition-all self-start"
-        >
-          <Plus className="h-4 w-4" />
-          {showAddForm ? 'Close Form' : 'Publish New Product'}
-        </button>
+        <div className="flex items-center gap-2 self-start">
+          {(!user || user.role === 'BUYER') && (
+            <button
+              type="button"
+              onClick={() => openAuthModal('signup')}
+              className="flex items-center gap-1.5 rounded-xl border border-purple-500/40 bg-purple-500/10 px-4 py-2.5 text-xs font-bold text-purple-300 hover:bg-purple-500 hover:text-white transition-all"
+            >
+              <Store className="h-4 w-4" />
+              Register as Merchant
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShowAddForm(!showAddForm)}
+            className="flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg hover:bg-purple-500 transition-all"
+          >
+            <Plus className="h-4 w-4" />
+            {showAddForm ? 'Close Form' : 'Publish New Product'}
+          </button>
+        </div>
       </div>
 
       {/* KPI Stats Cards */}
